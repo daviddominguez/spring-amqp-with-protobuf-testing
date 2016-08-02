@@ -34,6 +34,7 @@ message AuditMessageNorthProtobuf {
 
     optional int32 byte_size = 8;
     map<string, string> payload = 9;
+    required string user_id = 10;
     extensions 100 to max;
 }
 
@@ -66,4 +67,6 @@ message AuditMessageSouthProtobuf {
 
     optional int32 byte_size = 8;
     map<string, string> payload = 9;
+    required string device_id = 10;
+    extensions 100 to max;
 }
