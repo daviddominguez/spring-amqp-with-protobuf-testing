@@ -144,6 +144,20 @@ public final class AuditMessageProtobuf {
 
     java.lang.String getPayloadOrThrow(
         java.lang.String key);
+
+    /**
+     * <code>required string user_id = 10;</code>
+     */
+    boolean hasUserId();
+    /**
+     * <code>required string user_id = 10;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>required string user_id = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
   }
   /**
    * Protobuf type {@code audit.AuditMessageNorthProtobuf}
@@ -166,6 +180,7 @@ public final class AuditMessageProtobuf {
       transactionId_ = "";
       status_ = 0;
       byteSize_ = 0;
+      userId_ = "";
     }
 
     @java.lang.Override
@@ -268,6 +283,12 @@ public final class AuditMessageProtobuf {
               payload = input.readMessage(
                   PayloadDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               payload_.getMutableMap().put(payload.getKey(), payload.getValue());
+              break;
+            }
+            case 82: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000100;
+              userId_ = bs;
               break;
             }
           }
@@ -901,6 +922,48 @@ public final class AuditMessageProtobuf {
       return map.get(key);
     }
 
+    public static final int USER_ID_FIELD_NUMBER = 10;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>required string user_id = 10;</code>
+     */
+    public boolean hasUserId() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>required string user_id = 10;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string user_id = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -924,6 +987,10 @@ public final class AuditMessageProtobuf {
         return false;
       }
       if (!hasSubject()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasUserId()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -973,6 +1040,9 @@ public final class AuditMessageProtobuf {
             .build();
         output.writeMessage(9, payload);
       }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 10, userId_);
+      }
       extensionWriter.writeUntil(536870912, output);
       unknownFields.writeTo(output);
     }
@@ -1019,6 +1089,9 @@ public final class AuditMessageProtobuf {
             .build();
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(9, payload);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(10, userId_);
       }
       size += extensionsSerializedSize();
       size += unknownFields.getSerializedSize();
@@ -1077,6 +1150,11 @@ public final class AuditMessageProtobuf {
       }
       result = result && internalGetPayload().equals(
           other.internalGetPayload());
+      result = result && (hasUserId() == other.hasUserId());
+      if (hasUserId()) {
+        result = result && getUserId()
+            .equals(other.getUserId());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       result = result &&
           getExtensionFields().equals(other.getExtensionFields());
@@ -1125,6 +1203,10 @@ public final class AuditMessageProtobuf {
       if (!internalGetPayload().getMap().isEmpty()) {
         hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
         hash = (53 * hash) + internalGetPayload().hashCode();
+      }
+      if (hasUserId()) {
+        hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getUserId().hashCode();
       }
       hash = hashFields(hash, getExtensionFields());
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1284,6 +1366,8 @@ public final class AuditMessageProtobuf {
         byteSize_ = 0;
         bitField0_ = (bitField0_ & ~0x00000080);
         internalGetMutablePayload().clear();
+        userId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -1342,6 +1426,10 @@ public final class AuditMessageProtobuf {
         result.byteSize_ = byteSize_;
         result.payload_ = internalGetPayload();
         result.payload_.makeImmutable();
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.userId_ = userId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1441,6 +1529,11 @@ public final class AuditMessageProtobuf {
         }
         internalGetMutablePayload().mergeFrom(
             other.internalGetPayload());
+        if (other.hasUserId()) {
+          bitField0_ |= 0x00000200;
+          userId_ = other.userId_;
+          onChanged();
+        }
         this.mergeExtensionFields(other);
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1461,6 +1554,9 @@ public final class AuditMessageProtobuf {
           return false;
         }
         if (!hasSubject()) {
+          return false;
+        }
+        if (!hasUserId()) {
           return false;
         }
         if (!extensionsAreInitialized()) {
@@ -2050,6 +2146,82 @@ public final class AuditMessageProtobuf {
         getMutablePayload().putAll(values);
         return this;
       }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>required string user_id = 10;</code>
+       */
+      public boolean hasUserId() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>required string user_id = 10;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            userId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string user_id = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string user_id = 10;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000200;
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string user_id = 10;</code>
+       */
+      public Builder clearUserId() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string user_id = 10;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000200;
+        userId_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -2101,7 +2273,8 @@ public final class AuditMessageProtobuf {
 
   public interface AuditMessageSouthProtobufOrBuilder extends
       // @@protoc_insertion_point(interface_extends:audit.AuditMessageSouthProtobuf)
-      com.google.protobuf.MessageOrBuilder {
+      com.google.protobuf.GeneratedMessage.
+          ExtendableMessageOrBuilder<AuditMessageSouthProtobuf> {
 
     /**
      * <code>required string component = 1;</code>
@@ -2228,16 +2401,31 @@ public final class AuditMessageProtobuf {
 
     java.lang.String getPayloadOrThrow(
         java.lang.String key);
+
+    /**
+     * <code>required string device_id = 10;</code>
+     */
+    boolean hasDeviceId();
+    /**
+     * <code>required string device_id = 10;</code>
+     */
+    java.lang.String getDeviceId();
+    /**
+     * <code>required string device_id = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getDeviceIdBytes();
   }
   /**
    * Protobuf type {@code audit.AuditMessageSouthProtobuf}
    */
   public  static final class AuditMessageSouthProtobuf extends
-      com.google.protobuf.GeneratedMessage implements
+      com.google.protobuf.GeneratedMessage.ExtendableMessage<
+        AuditMessageSouthProtobuf> implements
       // @@protoc_insertion_point(message_implements:audit.AuditMessageSouthProtobuf)
       AuditMessageSouthProtobufOrBuilder {
     // Use AuditMessageSouthProtobuf.newBuilder() to construct.
-    private AuditMessageSouthProtobuf(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+    private AuditMessageSouthProtobuf(com.google.protobuf.GeneratedMessage.ExtendableBuilder<es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf, ?> builder) {
       super(builder);
     }
     private AuditMessageSouthProtobuf() {
@@ -2249,6 +2437,7 @@ public final class AuditMessageProtobuf {
       transactionId_ = "";
       status_ = 0;
       byteSize_ = 0;
+      deviceId_ = "";
     }
 
     @java.lang.Override
@@ -2351,6 +2540,12 @@ public final class AuditMessageProtobuf {
               payload = input.readMessage(
                   PayloadDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               payload_.getMutableMap().put(payload.getKey(), payload.getValue());
+              break;
+            }
+            case 82: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000100;
+              deviceId_ = bs;
               break;
             }
           }
@@ -2984,6 +3179,48 @@ public final class AuditMessageProtobuf {
       return map.get(key);
     }
 
+    public static final int DEVICE_ID_FIELD_NUMBER = 10;
+    private volatile java.lang.Object deviceId_;
+    /**
+     * <code>required string device_id = 10;</code>
+     */
+    public boolean hasDeviceId() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>required string device_id = 10;</code>
+     */
+    public java.lang.String getDeviceId() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          deviceId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string device_id = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDeviceIdBytes() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        deviceId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3010,12 +3247,23 @@ public final class AuditMessageProtobuf {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasDeviceId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!extensionsAreInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      com.google.protobuf.GeneratedMessage
+        .ExtendableMessage<es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf>.ExtensionWriter
+          extensionWriter = newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, component_);
       }
@@ -3049,6 +3297,10 @@ public final class AuditMessageProtobuf {
             .build();
         output.writeMessage(9, payload);
       }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 10, deviceId_);
+      }
+      extensionWriter.writeUntil(536870912, output);
       unknownFields.writeTo(output);
     }
 
@@ -3095,6 +3347,10 @@ public final class AuditMessageProtobuf {
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(9, payload);
       }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(10, deviceId_);
+      }
+      size += extensionsSerializedSize();
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -3151,7 +3407,14 @@ public final class AuditMessageProtobuf {
       }
       result = result && internalGetPayload().equals(
           other.internalGetPayload());
+      result = result && (hasDeviceId() == other.hasDeviceId());
+      if (hasDeviceId()) {
+        result = result && getDeviceId()
+            .equals(other.getDeviceId());
+      }
       result = result && unknownFields.equals(other.unknownFields);
+      result = result &&
+          getExtensionFields().equals(other.getExtensionFields());
       return result;
     }
 
@@ -3198,6 +3461,11 @@ public final class AuditMessageProtobuf {
         hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
         hash = (53 * hash) + internalGetPayload().hashCode();
       }
+      if (hasDeviceId()) {
+        hash = (37 * hash) + DEVICE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getDeviceId().hashCode();
+      }
+      hash = hashFields(hash, getExtensionFields());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3284,7 +3552,8 @@ public final class AuditMessageProtobuf {
      * Protobuf type {@code audit.AuditMessageSouthProtobuf}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.ExtendableBuilder<
+          es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf, Builder> implements
         // @@protoc_insertion_point(builder_implements:audit.AuditMessageSouthProtobuf)
         es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobufOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -3354,6 +3623,8 @@ public final class AuditMessageProtobuf {
         byteSize_ = 0;
         bitField0_ = (bitField0_ & ~0x00000080);
         internalGetMutablePayload().clear();
+        deviceId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -3412,6 +3683,10 @@ public final class AuditMessageProtobuf {
         result.byteSize_ = byteSize_;
         result.payload_ = internalGetPayload();
         result.payload_.makeImmutable();
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.deviceId_ = deviceId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3442,6 +3717,29 @@ public final class AuditMessageProtobuf {
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
         return (Builder) super.addRepeatedField(field, value);
+      }
+      public <Type> Builder setExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf, Type> extension,
+          Type value) {
+        return (Builder) super.setExtension(extension, value);
+      }
+      public <Type> Builder setExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf, java.util.List<Type>> extension,
+          int index, Type value) {
+        return (Builder) super.setExtension(extension, index, value);
+      }
+      public <Type> Builder addExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf, java.util.List<Type>> extension,
+          Type value) {
+        return (Builder) super.addExtension(extension, value);
+      }
+      public <Type> Builder clearExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf, ?> extension) {
+        return (Builder) super.clearExtension(extension);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf) {
@@ -3488,6 +3786,12 @@ public final class AuditMessageProtobuf {
         }
         internalGetMutablePayload().mergeFrom(
             other.internalGetPayload());
+        if (other.hasDeviceId()) {
+          bitField0_ |= 0x00000200;
+          deviceId_ = other.deviceId_;
+          onChanged();
+        }
+        this.mergeExtensionFields(other);
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -3507,6 +3811,12 @@ public final class AuditMessageProtobuf {
           return false;
         }
         if (!hasSubject()) {
+          return false;
+        }
+        if (!hasDeviceId()) {
+          return false;
+        }
+        if (!extensionsAreInitialized()) {
           return false;
         }
         return true;
@@ -4093,6 +4403,82 @@ public final class AuditMessageProtobuf {
         getMutablePayload().putAll(values);
         return this;
       }
+
+      private java.lang.Object deviceId_ = "";
+      /**
+       * <code>required string device_id = 10;</code>
+       */
+      public boolean hasDeviceId() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>required string device_id = 10;</code>
+       */
+      public java.lang.String getDeviceId() {
+        java.lang.Object ref = deviceId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            deviceId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string device_id = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDeviceIdBytes() {
+        java.lang.Object ref = deviceId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          deviceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string device_id = 10;</code>
+       */
+      public Builder setDeviceId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000200;
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string device_id = 10;</code>
+       */
+      public Builder clearDeviceId() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        deviceId_ = getDefaultInstance().getDeviceId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string device_id = 10;</code>
+       */
+      public Builder setDeviceIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000200;
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -4171,7 +4557,7 @@ public final class AuditMessageProtobuf {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022AuditMessage.proto\022\005audit\"\252\004\n\031AuditMes" +
+      "\n\022AuditMessage.proto\022\005audit\"\273\004\n\031AuditMes" +
       "sageNorthProtobuf\022\021\n\tcomponent\030\001 \002(\t\022\014\n\004" +
       "name\030\002 \002(\t\0226\n\004type\030\003 \002(\0162(.audit.AuditMe" +
       "ssageNorthProtobuf.MsgType\022@\n\tdirection\030" +
@@ -4180,27 +4566,28 @@ public final class AuditMessageProtobuf {
       "tion_id\030\006 \001(\t\022:\n\006status\030\007 \001(\0162*.audit.Au" +
       "ditMessageNorthProtobuf.MsgStatus\022\021\n\tbyt" +
       "e_size\030\010 \001(\005\022>\n\007payload\030\t \003(\0132-.audit.Au" +
-      "ditMessageNorthProtobuf.PayloadEntry\032.\n\014",
-      "PayloadEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\":\n\007MsgType\022\t\n\005EVENT\020\000\022\013\n\007REQUEST\020\001\022" +
-      "\014\n\010RESPONSE\020\002\022\t\n\005OTHER\020\003\"\037\n\014MsgDirection" +
-      "\022\006\n\002IN\020\000\022\007\n\003OUT\020\001\"#\n\tMsgStatus\022\013\n\007SUCCES" +
-      "S\020\000\022\t\n\005ERROR\020\001*\010\010d\020\200\200\200\200\002\"\240\004\n\031AuditMessag" +
-      "eSouthProtobuf\022\021\n\tcomponent\030\001 \002(\t\022\014\n\004nam" +
-      "e\030\002 \002(\t\0226\n\004type\030\003 \002(\0162(.audit.AuditMessa" +
-      "geSouthProtobuf.MsgType\022@\n\tdirection\030\004 \002" +
-      "(\0162-.audit.AuditMessageSouthProtobuf.Msg" +
-      "Direction\022\017\n\007subject\030\005 \002(\t\022\026\n\016transactio",
-      "n_id\030\006 \001(\t\022:\n\006status\030\007 \001(\0162*.audit.Audit" +
-      "MessageSouthProtobuf.MsgStatus\022\021\n\tbyte_s" +
-      "ize\030\010 \001(\005\022>\n\007payload\030\t \003(\0132-.audit.Audit" +
-      "MessageSouthProtobuf.PayloadEntry\032.\n\014Pay" +
-      "loadEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028" +
-      "\001\":\n\007MsgType\022\t\n\005EVENT\020\000\022\013\n\007REQUEST\020\001\022\014\n\010" +
-      "RESPONSE\020\002\022\t\n\005OTHER\020\003\"\037\n\014MsgDirection\022\006\n" +
-      "\002IN\020\000\022\007\n\003OUT\020\001\"#\n\tMsgStatus\022\013\n\007SUCCESS\020\000" +
-      "\022\t\n\005ERROR\020\001B5\n\035es.amplia.springamqp.prot" +
-      "obufB\024AuditMessageProtobuf"
+      "ditMessageNorthProtobuf.PayloadEntry\022\017\n\007",
+      "user_id\030\n \002(\t\032.\n\014PayloadEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\":\n\007MsgType\022\t\n\005EVEN" +
+      "T\020\000\022\013\n\007REQUEST\020\001\022\014\n\010RESPONSE\020\002\022\t\n\005OTHER\020" +
+      "\003\"\037\n\014MsgDirection\022\006\n\002IN\020\000\022\007\n\003OUT\020\001\"#\n\tMs" +
+      "gStatus\022\013\n\007SUCCESS\020\000\022\t\n\005ERROR\020\001*\010\010d\020\200\200\200\200" +
+      "\002\"\275\004\n\031AuditMessageSouthProtobuf\022\021\n\tcompo" +
+      "nent\030\001 \002(\t\022\014\n\004name\030\002 \002(\t\0226\n\004type\030\003 \002(\0162(" +
+      ".audit.AuditMessageSouthProtobuf.MsgType" +
+      "\022@\n\tdirection\030\004 \002(\0162-.audit.AuditMessage" +
+      "SouthProtobuf.MsgDirection\022\017\n\007subject\030\005 ",
+      "\002(\t\022\026\n\016transaction_id\030\006 \001(\t\022:\n\006status\030\007 " +
+      "\001(\0162*.audit.AuditMessageSouthProtobuf.Ms" +
+      "gStatus\022\021\n\tbyte_size\030\010 \001(\005\022>\n\007payload\030\t " +
+      "\003(\0132-.audit.AuditMessageSouthProtobuf.Pa" +
+      "yloadEntry\022\021\n\tdevice_id\030\n \002(\t\032.\n\014Payload" +
+      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\":\n" +
+      "\007MsgType\022\t\n\005EVENT\020\000\022\013\n\007REQUEST\020\001\022\014\n\010RESP" +
+      "ONSE\020\002\022\t\n\005OTHER\020\003\"\037\n\014MsgDirection\022\006\n\002IN\020" +
+      "\000\022\007\n\003OUT\020\001\"#\n\tMsgStatus\022\013\n\007SUCCESS\020\000\022\t\n\005" +
+      "ERROR\020\001*\010\010d\020\200\200\200\200\002B5\n\035es.amplia.springamq",
+      "p.protobufB\024AuditMessageProtobuf"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4219,7 +4606,7 @@ public final class AuditMessageProtobuf {
     internal_static_audit_AuditMessageNorthProtobuf_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_audit_AuditMessageNorthProtobuf_descriptor,
-        new java.lang.String[] { "Component", "Name", "Type", "Direction", "Subject", "TransactionId", "Status", "ByteSize", "Payload", });
+        new java.lang.String[] { "Component", "Name", "Type", "Direction", "Subject", "TransactionId", "Status", "ByteSize", "Payload", "UserId", });
     internal_static_audit_AuditMessageNorthProtobuf_PayloadEntry_descriptor =
       internal_static_audit_AuditMessageNorthProtobuf_descriptor.getNestedTypes().get(0);
     internal_static_audit_AuditMessageNorthProtobuf_PayloadEntry_fieldAccessorTable = new
@@ -4231,7 +4618,7 @@ public final class AuditMessageProtobuf {
     internal_static_audit_AuditMessageSouthProtobuf_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_audit_AuditMessageSouthProtobuf_descriptor,
-        new java.lang.String[] { "Component", "Name", "Type", "Direction", "Subject", "TransactionId", "Status", "ByteSize", "Payload", });
+        new java.lang.String[] { "Component", "Name", "Type", "Direction", "Subject", "TransactionId", "Status", "ByteSize", "Payload", "DeviceId", });
     internal_static_audit_AuditMessageSouthProtobuf_PayloadEntry_descriptor =
       internal_static_audit_AuditMessageSouthProtobuf_descriptor.getNestedTypes().get(0);
     internal_static_audit_AuditMessageSouthProtobuf_PayloadEntry_fieldAccessorTable = new
