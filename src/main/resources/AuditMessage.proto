@@ -1,0 +1,69 @@
+syntax = "proto2";
+
+package audit;
+
+option java_package = "es.amplia.springamqp.protobuf";
+option java_outer_classname = "AuditMessageProtobuf";
+
+message AuditMessageNorthProtobuf {
+    required string component = 1;
+    required string name = 2;
+
+    enum MsgType {
+        EVENT = 0;
+        REQUEST = 1;
+        RESPONSE = 2;
+        OTHER = 3;
+    }
+    required MsgType type = 3;
+
+    enum MsgDirection {
+        IN = 0;
+        OUT = 1;
+    }
+    required MsgDirection direction = 4;
+    required string subject = 5;
+
+    optional string transaction_id = 6;
+
+    enum MsgStatus {
+        SUCCESS = 0;
+        ERROR = 1;
+    }
+    optional MsgStatus status = 7;
+
+    optional int32 byte_size = 8;
+    map<string, string> payload = 9;
+    extensions 100 to max;
+}
+
+message AuditMessageSouthProtobuf {
+    required string component = 1;
+    required string name = 2;
+
+    enum MsgType {
+        EVENT = 0;
+        REQUEST = 1;
+        RESPONSE = 2;
+        OTHER = 3;
+    }
+    required MsgType type = 3;
+
+    enum MsgDirection {
+        IN = 0;
+        OUT = 1;
+    }
+    required MsgDirection direction = 4;
+    required string subject = 5;
+
+    optional string transaction_id = 6;
+
+    enum MsgStatus {
+        SUCCESS = 0;
+        ERROR = 1;
+    }
+    optional MsgStatus status = 7;
+
+    optional int32 byte_size = 8;
+    map<string, string> payload = 9;
+}
