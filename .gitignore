@@ -1,12 +1,31 @@
-*.class
+# Maven, Ant and Gradle
+bin/
+build/
+target/
+gradle/
+.gradle/
+release.properties
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Eclipse
+.settings/
+.externalToolBuilders/
+.project
+.classpath
+.pdm
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Idea
+out/
+.idea/
+*.iml
+*.ipr
+*.iws
+atlassian-ide-plugin.xml
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Runtime
+logs/
+*.log
+*.swp
+*~
+
+# Mac Finder file
+.DS_store
