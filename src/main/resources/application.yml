@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: spring-amqp-with-protobuf-testing
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    virtual-host: /
