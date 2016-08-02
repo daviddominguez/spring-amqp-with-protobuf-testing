@@ -2,15 +2,17 @@ package es.amplia.springamqp.configuration;
 
 import es.amplia.springamqp.Receiver;
 import es.amplia.springamqp.converter.ProtobufMessageConverter;
-import org.springframework.amqp.core.AmqpTemplate;
+import es.amplia.springamqp.model.serializer.AuditMessageNorthSerializer;
+import es.amplia.springamqp.model.serializer.AuditMessageSouthSerializer;
+import es.amplia.springamqp.protobuf.AuditMessageProtobuf;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -57,24 +59,31 @@ public class SpringAmqpConfiguration {
     }
 
     @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer auditMessageNorthContainer(ConnectionFactory connectionFactory, @Qualifier("auditMessageNorthListenerAdapter") MessageListenerAdapter listenerAdapter) {
+        return container(connectionFactory, listenerAdapter, NORTH_MESSAGE_QUEUE_NAME);
+    }
+
+    @Bean
+    SimpleMessageListenerContainer auditMessageSouthContainer(ConnectionFactory connectionFactory, @Qualifier("auditMessageSouthListenerAdapter") MessageListenerAdapter listenerAdapter) {
+        return container(connectionFactory, listenerAdapter, SOUTH_MESSAGE_QUEUE_NAME);
+    }
+
+    private SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, String queueName) {
         final SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(NORTH_MESSAGE_QUEUE_NAME, SOUTH_MESSAGE_QUEUE_NAME);
+        container.setQueueNames(queueName);
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
-    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(messageConverter());
-        return rabbitTemplate;
+    public MessageConverter auditMessageNorthConverter() {
+        return new ProtobufMessageConverter<>(AuditMessageProtobuf.AuditMessageNorthProtobuf.getDescriptor().getFile(), new AuditMessageNorthSerializer());
     }
 
     @Bean
-    public MessageConverter messageConverter() {
-        return new ProtobufMessageConverter();
+    public MessageConverter auditMessageSouthConverter() {
+        return new ProtobufMessageConverter<>(AuditMessageProtobuf.AuditMessageSouthProtobuf.getDescriptor().getFile(), new AuditMessageSouthSerializer());
     }
 
     @Bean
@@ -83,11 +92,16 @@ public class SpringAmqpConfiguration {
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, Receiver.DEFAULT_RECEIVE_METHOD_NAME);
-        messageListenerAdapter.addQueueOrTagToMethodName(NORTH_MESSAGE_QUEUE_NAME, NORTH_MSG_METHOD_NAME);
-        messageListenerAdapter.addQueueOrTagToMethodName(SOUTH_MESSAGE_QUEUE_NAME, SOUTH_MSG_METHOD_NAME);
-        messageListenerAdapter.setMessageConverter(messageConverter());
+    MessageListenerAdapter auditMessageNorthListenerAdapter(Receiver receiver) {
+        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, NORTH_MSG_METHOD_NAME);
+        messageListenerAdapter.setMessageConverter(auditMessageNorthConverter());
+        return messageListenerAdapter;
+    }
+
+    @Bean
+    MessageListenerAdapter auditMessageSouthListenerAdapter(Receiver receiver) {
+        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, SOUTH_MSG_METHOD_NAME);
+        messageListenerAdapter.setMessageConverter(auditMessageSouthConverter());
         return messageListenerAdapter;
     }
 }
