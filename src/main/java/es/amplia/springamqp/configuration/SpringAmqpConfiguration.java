@@ -42,22 +42,34 @@ public class SpringAmqpConfiguration {
     @Bean
     List<Binding> bindings() {
         return asList(
-                new Binding(amqpProperties.getQueue().getAuditMessageNorth(), QUEUE, "", amqpProperties.getQueue().getAuditMessageNorth(), null),
-                new Binding(amqpProperties.getQueue().getAuditMessageSouth(), QUEUE, "", amqpProperties.getQueue().getAuditMessageSouth(), null)
+                new Binding(amqpProperties.getQueue().getAuditMessageNorth(), QUEUE, "",
+                        amqpProperties.getQueue().getAuditMessageNorth(), null),
+                new Binding(amqpProperties.getQueue().getAuditMessageSouth(), QUEUE, "",
+                        amqpProperties.getQueue().getAuditMessageSouth(), null)
         );
     }
 
     @Bean
-    SimpleMessageListenerContainer auditMessageNorthContainer(ConnectionFactory connectionFactory, @Qualifier("auditMessageNorthListenerAdapter") MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer auditMessageNorthContainer(
+            ConnectionFactory connectionFactory,
+            @Qualifier("auditMessageNorthListenerAdapter") MessageListenerAdapter listenerAdapter
+    ) {
         return container(connectionFactory, listenerAdapter, amqpProperties.getQueue().getAuditMessageNorth());
     }
 
     @Bean
-    SimpleMessageListenerContainer auditMessageSouthContainer(ConnectionFactory connectionFactory, @Qualifier("auditMessageSouthListenerAdapter") MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer auditMessageSouthContainer(
+            ConnectionFactory connectionFactory,
+            @Qualifier("auditMessageSouthListenerAdapter") MessageListenerAdapter listenerAdapter
+    ) {
         return container(connectionFactory, listenerAdapter, amqpProperties.getQueue().getAuditMessageSouth());
     }
 
-    private SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, String queueName) {
+    private SimpleMessageListenerContainer container(
+            ConnectionFactory connectionFactory,
+            MessageListenerAdapter listenerAdapter,
+            String queueName
+    ) {
         final SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);
@@ -67,12 +79,16 @@ public class SpringAmqpConfiguration {
 
     @Bean
     public MessageConverter auditMessageNorthConverter() {
-        return new ProtobufMessageConverter<>(AuditMessageProtobuf.AuditMessageNorthProtobuf.getDescriptor().getFile(), new AuditMessageNorthSerializer());
+        return new ProtobufMessageConverter<>(
+                AuditMessageProtobuf.AuditMessageNorthProtobuf.getDescriptor().getFile(),
+                new AuditMessageNorthSerializer());
     }
 
     @Bean
     public MessageConverter auditMessageSouthConverter() {
-        return new ProtobufMessageConverter<>(AuditMessageProtobuf.AuditMessageSouthProtobuf.getDescriptor().getFile(), new AuditMessageSouthSerializer());
+        return new ProtobufMessageConverter<>(
+                AuditMessageProtobuf.AuditMessageSouthProtobuf.getDescriptor().getFile(),
+                new AuditMessageSouthSerializer());
     }
 
     @Bean
