@@ -1,39 +1,21 @@
 package es.amplia.springamqp;
 
-import es.amplia.springamqp.configuration.AmqpProperties;
 import es.amplia.springamqp.model.AuditMessage;
 import es.amplia.springamqp.model.AuditMessageNorth;
 import es.amplia.springamqp.model.AuditMessageSouth;
 import es.amplia.springamqp.model.builder.AuditMessageNorthBuilder;
 import es.amplia.springamqp.model.builder.AuditMessageSouthBuilder;
+import es.amplia.springamqp.sender.AuditMessagesService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Collections;
 import java.util.UUID;
 
 public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringAmqpApplicationTests.class);
-
     @Autowired
-    private AmqpProperties amqpProperties;
-
-    @Autowired
-    private RabbitTemplate amqpTemplate;
-
-    @Autowired
-    @Qualifier("auditMessageNorthConverter")
-    private MessageConverter auditMessageNorthConverter;
-
-    @Autowired
-    @Qualifier("auditMessageSouthConverter")
-    private MessageConverter auditMessageSouthConverter;
+    private AuditMessagesService messagesService;
 
     @Test
     public void test () {
@@ -49,10 +31,7 @@ public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
                 .subject("subject")
                 .payload(Collections.<String, String>emptyMap())
                 .build();
-
-        LOGGER.debug("Sending message '{}'", messageNorth);
-        amqpTemplate.setMessageConverter(auditMessageNorthConverter);
-        amqpTemplate.convertAndSend(amqpProperties.getQueue().getAuditMessageNorth(), messageNorth);
+        messagesService.sendAuditMessageNorth(messageNorth);
 
         AuditMessageSouth messageSouth = (AuditMessageSouth) AuditMessageSouthBuilder.builder()
                 .deviceId("deviceId")
@@ -66,8 +45,6 @@ public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
                 .subject("subject")
                 .payload(Collections.<String, String>emptyMap())
                 .build();
-        LOGGER.debug("Sending message '{}'", messageSouth);
-        amqpTemplate.setMessageConverter(auditMessageSouthConverter);
-        amqpTemplate.convertAndSend(amqpProperties.getQueue().getAuditMessageSouth(), messageSouth);
+        messagesService.sendAuditMessageSouth(messageSouth);
     }
 }
