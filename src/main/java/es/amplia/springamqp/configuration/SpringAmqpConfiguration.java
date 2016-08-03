@@ -7,12 +7,13 @@ import es.amplia.springamqp.model.serializer.AuditMessageSouthSerializer;
 import es.amplia.springamqp.protobuf.AuditMessageProtobuf;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,48 +25,36 @@ import static java.util.Arrays.asList;
 import static org.springframework.amqp.core.Binding.DestinationType.QUEUE;
 
 @Configuration
+@EnableConfigurationProperties(AmqpProperties.class)
 public class SpringAmqpConfiguration {
 
-    public static final String EXCHANGE = "exchange_name";
-    public static final String NORTH_MESSAGE_ROUTING_KEY = "north_msg_routing_key";
-    public static final String SOUTH_MESSAGE_ROUTING_KEY = "south_msg_routing_key";
-
-    private static final String NORTH_MESSAGE_QUEUE_NAME = "north_msg_queue";
-    private static final String SOUTH_MESSAGE_QUEUE_NAME = "south_msg_queue";
-
-    private static final boolean IS_DURABLE = false;
-    public static final boolean IS_AUTODELETE = true;
+    @Autowired
+    private AmqpProperties amqpProperties;
 
     @Bean
     List<Queue> queues() {
         return asList(
-                new Queue(NORTH_MESSAGE_QUEUE_NAME, IS_DURABLE, false, IS_AUTODELETE),
-                new Queue(SOUTH_MESSAGE_QUEUE_NAME, IS_DURABLE, false, IS_AUTODELETE)
+                new Queue(amqpProperties.getQueue().getAuditMessageNorth()),
+                new Queue(amqpProperties.getQueue().getAuditMessageSouth())
         );
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE, IS_DURABLE, IS_AUTODELETE);
-    }
-
-    @Bean
     List<Binding> bindings() {
-        // return BindingBuilder.bind(queue).to(exchange).with(NORTH_MESSAGE_ROUTING_KEY);
         return asList(
-                new Binding(NORTH_MESSAGE_QUEUE_NAME, QUEUE, EXCHANGE, NORTH_MESSAGE_ROUTING_KEY, null),
-                new Binding(SOUTH_MESSAGE_QUEUE_NAME, QUEUE, EXCHANGE, SOUTH_MESSAGE_ROUTING_KEY, null)
+                new Binding(amqpProperties.getQueue().getAuditMessageNorth(), QUEUE, "", amqpProperties.getQueue().getAuditMessageNorth(), null),
+                new Binding(amqpProperties.getQueue().getAuditMessageSouth(), QUEUE, "", amqpProperties.getQueue().getAuditMessageSouth(), null)
         );
     }
 
     @Bean
     SimpleMessageListenerContainer auditMessageNorthContainer(ConnectionFactory connectionFactory, @Qualifier("auditMessageNorthListenerAdapter") MessageListenerAdapter listenerAdapter) {
-        return container(connectionFactory, listenerAdapter, NORTH_MESSAGE_QUEUE_NAME);
+        return container(connectionFactory, listenerAdapter, amqpProperties.getQueue().getAuditMessageNorth());
     }
 
     @Bean
     SimpleMessageListenerContainer auditMessageSouthContainer(ConnectionFactory connectionFactory, @Qualifier("auditMessageSouthListenerAdapter") MessageListenerAdapter listenerAdapter) {
-        return container(connectionFactory, listenerAdapter, SOUTH_MESSAGE_QUEUE_NAME);
+        return container(connectionFactory, listenerAdapter, amqpProperties.getQueue().getAuditMessageSouth());
     }
 
     private SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, String queueName) {

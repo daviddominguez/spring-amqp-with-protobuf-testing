@@ -1,18 +1,14 @@
 package es.amplia.springamqp;
 
-import com.google.protobuf.Message;
-import es.amplia.springamqp.configuration.SpringAmqpConfiguration;
+import es.amplia.springamqp.configuration.AmqpProperties;
 import es.amplia.springamqp.model.AuditMessage;
 import es.amplia.springamqp.model.AuditMessageNorth;
 import es.amplia.springamqp.model.AuditMessageSouth;
 import es.amplia.springamqp.model.builder.AuditMessageNorthBuilder;
 import es.amplia.springamqp.model.builder.AuditMessageSouthBuilder;
-import es.amplia.springamqp.model.serializer.ProtobufSerializer;
-import es.amplia.springamqp.protobuf.AuditMessageProtobuf;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +20,9 @@ import java.util.UUID;
 public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringAmqpApplicationTests.class);
+
+    @Autowired
+    private AmqpProperties amqpProperties;
 
     @Autowired
     private RabbitTemplate amqpTemplate;
@@ -53,7 +52,7 @@ public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
 
         LOGGER.debug("Sending message '{}'", messageNorth);
         amqpTemplate.setMessageConverter(auditMessageNorthConverter);
-        amqpTemplate.convertAndSend(SpringAmqpConfiguration.EXCHANGE, SpringAmqpConfiguration.NORTH_MESSAGE_ROUTING_KEY, messageNorth);
+        amqpTemplate.convertAndSend(amqpProperties.getQueue().getAuditMessageNorth(), messageNorth);
 
         AuditMessageSouth messageSouth = (AuditMessageSouth) AuditMessageSouthBuilder.builder()
                 .deviceId("deviceId")
@@ -69,6 +68,6 @@ public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
                 .build();
         LOGGER.debug("Sending message '{}'", messageSouth);
         amqpTemplate.setMessageConverter(auditMessageSouthConverter);
-        amqpTemplate.convertAndSend(SpringAmqpConfiguration.EXCHANGE, SpringAmqpConfiguration.SOUTH_MESSAGE_ROUTING_KEY, messageSouth);
+        amqpTemplate.convertAndSend(amqpProperties.getQueue().getAuditMessageSouth(), messageSouth);
     }
 }

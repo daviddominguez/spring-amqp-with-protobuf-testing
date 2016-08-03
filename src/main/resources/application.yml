@@ -6,3 +6,8 @@ spring:
     password: guest
     host: localhost
     virtual-host: /
+audit:
+  amqp:
+    queue:
+      auditMessageNorth: north_messages_queue
+      auditMessageSouth: south_messages_queue

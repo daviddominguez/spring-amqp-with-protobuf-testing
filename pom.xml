@@ -56,6 +56,14 @@
             <version>${spring-boot-starter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- metadata configuration generation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot-starter.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <properties>
