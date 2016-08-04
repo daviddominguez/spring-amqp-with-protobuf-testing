@@ -79,16 +79,12 @@ public class SpringAmqpConfiguration {
 
     @Bean
     public MessageConverter auditMessageNorthConverter() {
-        return new ProtobufMessageConverter<>(
-                AuditMessageProtobuf.AuditMessageNorthProtobuf.getDescriptor().getFile(),
-                new AuditMessageNorthSerializer());
+        return new ProtobufMessageConverter<>(new AuditMessageNorthSerializer());
     }
 
     @Bean
     public MessageConverter auditMessageSouthConverter() {
-        return new ProtobufMessageConverter<>(
-                AuditMessageProtobuf.AuditMessageSouthProtobuf.getDescriptor().getFile(),
-                new AuditMessageSouthSerializer());
+        return new ProtobufMessageConverter<>(new AuditMessageSouthSerializer());
     }
 
     @Bean

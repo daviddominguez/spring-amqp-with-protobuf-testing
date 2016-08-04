@@ -6,13 +6,16 @@ import es.amplia.springamqp.model.AuditMessage;
 import es.amplia.springamqp.model.AuditMessageSouth;
 import es.amplia.springamqp.model.builder.AuditMessageSouthBuilder;
 import es.amplia.springamqp.protobuf.AuditMessageProtobuf.AuditMessageSouthProtobuf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AuditMessageSouthSerializer implements ProtobufSerializer<AuditMessageSouth> {
 
     @Override
-    public Message serialize(AuditMessageSouth object) {
+    public byte[] serialize(AuditMessageSouth object) {
         return AuditMessageSouthProtobuf.newBuilder()
                 .setComponent(object.getComponent())
                 .setName(object.getName())
@@ -24,14 +27,13 @@ public class AuditMessageSouthSerializer implements ProtobufSerializer<AuditMess
                 .setByteSize(object.getByteSize())
                 .putAllPayload(object.getPayload())
                 .setDeviceId(object.getDeviceId())
-                .build();
+                .build().toByteArray();
     }
 
     @Override
-    public AuditMessageSouth deserialize(Message message) {
-        checkArgument(AuditMessageSouthProtobuf.getDescriptor().getName().equals(message.getDescriptorForType().getName()));
+    public AuditMessageSouth deserialize(byte[] message) {
         try {
-            AuditMessageSouthProtobuf protobuf = AuditMessageSouthProtobuf.parseFrom(message.toByteArray());
+            AuditMessageSouthProtobuf protobuf = AuditMessageSouthProtobuf.parseFrom(message);
             return (AuditMessageSouth) AuditMessageSouthBuilder.builder()
                     .deviceId(protobuf.getDeviceId())
                     .component(protobuf.getComponent())
@@ -45,8 +47,7 @@ public class AuditMessageSouthSerializer implements ProtobufSerializer<AuditMess
                     .payload(protobuf.getPayloadMap())
                     .build();
         } catch (InvalidProtocolBufferException e) {
-            // TODO
-            throw new RuntimeException();
+            throw new RuntimeException("Error parsing protobuf object", e);
         }
     }
 }
