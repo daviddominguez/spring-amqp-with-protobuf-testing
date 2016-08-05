@@ -8,5 +8,5 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @IntegrationTest(value = "spring.profiles.active=test")
 @SpringApplicationConfiguration(classes = SpringAmqpApplication.class)
-public class AbstractSpringBootTest {
+public abstract class AbstractSpringBootTest {
 }
