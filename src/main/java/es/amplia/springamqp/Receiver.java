@@ -1,7 +1,6 @@
 package es.amplia.springamqp;
 
-import es.amplia.springamqp.model.AuditMessageNorth;
-import es.amplia.springamqp.model.AuditMessageSouth;
+import es.amplia.springamqp.model.AuditMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,14 +9,9 @@ public class Receiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
-    public static final String NORTH_MSG_METHOD_NAME = "processNorthMessage";
-    public static final String SOUTH_MSG_METHOD_NAME = "processSouthMessage";
+    public static final String AUDIT_MESSAGE_METHOD_NAME = "processMessage";
 
-    public void processNorthMessage(AuditMessageNorth message) {
-        LOGGER.debug("North message received '{}'", message);
-    }
-
-    public void processSouthMessage(AuditMessageSouth message) {
-        LOGGER.debug("South message received '{}'", message);
+    public void processMessage(AuditMessage message) {
+        LOGGER.debug("Audit message received '{}'", message);
     }
 }

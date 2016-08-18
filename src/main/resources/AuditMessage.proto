@@ -1,72 +1,93 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package audit;
 
 option java_package = "es.amplia.springamqp.protobuf";
-option java_outer_classname = "AuditMessageProtobuf";
+option java_outer_classname = "AuditMessageProto";
 
-message AuditMessageNorthProtobuf {
-    required string component = 1;
-    required string name = 2;
+import "google/protobuf/timestamp.proto";
+
+message AuditMessage {
+    enum ProcessType {
+        NO_PROCESS = 0;
+        CONNECTOR = 1;
+        REST_NORTH = 2;
+        ALARM = 3;
+    }
+    ProcessType process = 1; // required.
+
+    enum ComponentType {
+        NO_COMPONENT = 0;
+        RACO = 1;
+        PING_RELAY = 2;
+        REST = 3;
+        WEBSOCKET = 4;
+        MQTT = 5;
+        WS_JOB = 6;
+        WS_PROVISION = 7;
+        SNMP = 8;
+    }
+    ComponentType component = 2; // required.
+
+    enum NameType {
+        NO_NAME = 0;
+        ACCT_START = 1;
+        PING_REQUEST = 2;
+        PING_REPLY = 3;
+        DMM = 4;
+        OPERATION = 5;
+        ACCESS_VALIDATION = 6;
+        REFRESH_PRESENCE = 7;
+        CHANGE_PRESENCE = 8;
+        DEVICES = 9;
+    }
+    NameType name = 3; // required.
 
     enum MsgType {
-        EVENT = 0;
-        REQUEST = 1;
-        RESPONSE = 2;
-        OTHER = 3;
+        NO_TYPE = 0;
+        EVENT = 1;
+        REQUEST = 2;
+        RESPONSE = 3;
+        CONNECTION = 4;
+        INSERT = 5;
+        UPDATE = 6;
+        DELETE = 7;
+        CALLBACK = 8;
+        NOTIFICATION = 9;
     }
-    required MsgType type = 3;
+    MsgType type = 4; // required.
 
     enum MsgDirection {
-        IN = 0;
-        OUT = 1;
+        NO_DIR = 0;
+        IN = 1;
+        OUT = 2;
     }
-    required MsgDirection direction = 4;
-    required string subject = 5;
+    MsgDirection direction = 5; // required.
+    string subject = 6; // required.
 
-    optional string transaction_id = 6;
+    enum SubjectType {
+        NO_SUBJECT = 0;
+        IMSI = 1;
+        DEVICE = 2;
+        JOB = 3;
+        IP = 4;
+    }
+    SubjectType subject_type = 7; // required.
+
+    string user = 8;
+    string transaction_id = 9;
+    string sequence_id = 10;
 
     enum MsgStatus {
-        SUCCESS = 0;
-        ERROR = 1;
+        NONE = 0;
+        SUCCESS = 1;
+        ERROR = 2;
     }
-    optional MsgStatus status = 7;
+    MsgStatus status = 11;
 
-    optional int32 byte_size = 8;
-    map<string, string> payload = 9;
-    required string user_id = 10;
-    extensions 100 to max;
-}
+    int32 byte_size = 12;
+    map<string, string> payload = 13;
 
-message AuditMessageSouthProtobuf {
-    required string component = 1;
-    required string name = 2;
-
-    enum MsgType {
-        EVENT = 0;
-        REQUEST = 1;
-        RESPONSE = 2;
-        OTHER = 3;
-    }
-    required MsgType type = 3;
-
-    enum MsgDirection {
-        IN = 0;
-        OUT = 1;
-    }
-    required MsgDirection direction = 4;
-    required string subject = 5;
-
-    optional string transaction_id = 6;
-
-    enum MsgStatus {
-        SUCCESS = 0;
-        ERROR = 1;
-    }
-    optional MsgStatus status = 7;
-
-    optional int32 byte_size = 8;
-    map<string, string> payload = 9;
-    required string device_id = 10;
-    extensions 100 to max;
+    google.protobuf.Timestamp created_date_time = 14; // required.
+    uint32 version = 15; // required.
 }

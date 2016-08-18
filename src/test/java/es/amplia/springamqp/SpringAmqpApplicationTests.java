@@ -1,16 +1,13 @@
 package es.amplia.springamqp;
 
 import es.amplia.springamqp.model.AuditMessage;
-import es.amplia.springamqp.model.AuditMessageNorth;
-import es.amplia.springamqp.model.AuditMessageSouth;
-import es.amplia.springamqp.model.builder.AuditMessageNorthBuilder;
-import es.amplia.springamqp.model.builder.AuditMessageSouthBuilder;
+import es.amplia.springamqp.model.builder.AuditMessageBuilder;
 import es.amplia.springamqp.sender.AuditMessagesService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
-import java.util.UUID;
+import java.util.Date;
 
 public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
 
@@ -19,32 +16,23 @@ public class SpringAmqpApplicationTests extends AbstractSpringBootTest {
 
     @Test
     public void test () {
-        AuditMessageNorth messageNorth = (AuditMessageNorth) AuditMessageNorthBuilder.builder()
-                .userId(UUID.randomUUID())
-                .component("component")
-                .name("name")
+        AuditMessage messageNorth = AuditMessageBuilder.builder()
+                .process(AuditMessage.ProcessType.CONNECTOR)
+                .component(AuditMessage.ComponentType.WEBSOCKET)
+                .name(AuditMessage.NameType.OPERATION)
                 .type(AuditMessage.MsgType.REQUEST)
                 .direction(AuditMessage.MsgDirection.OUT)
-                .byteSize(100)
-                .transactionId("transactionId")
-                .status(AuditMessage.MsgStatus.SUCCESS)
                 .subject("subject")
-                .payload(Collections.<String, String>emptyMap())
-                .build();
-        messagesService.sendAuditMessageNorth(messageNorth);
-
-        AuditMessageSouth messageSouth = (AuditMessageSouth) AuditMessageSouthBuilder.builder()
-                .deviceId("deviceId")
-                .component("component")
-                .name("name")
-                .type(AuditMessage.MsgType.REQUEST)
-                .direction(AuditMessage.MsgDirection.OUT)
-                .byteSize(100)
+                .subjectType(AuditMessage.SubjectType.DEVICE)
+                .user("user")
                 .transactionId("transactionId")
+                .sequenceId("sequenceId")
                 .status(AuditMessage.MsgStatus.SUCCESS)
-                .subject("subject")
+                .byteSize(100)
                 .payload(Collections.<String, String>emptyMap())
+                .createdDateTime(new Date())
+                .version(0)
                 .build();
-        messagesService.sendAuditMessageSouth(messageSouth);
+        messagesService.sendAuditMessage(messageNorth);
     }
 }

@@ -1,4 +1,4 @@
-package es.amplia.springamqp.converter;
+package es.amplia.springamqp.model.converter;
 
 import es.amplia.springamqp.model.serializer.ProtobufSerializer;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;

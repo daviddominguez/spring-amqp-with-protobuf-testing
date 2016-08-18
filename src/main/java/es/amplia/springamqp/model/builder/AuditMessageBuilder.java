@@ -2,35 +2,35 @@ package es.amplia.springamqp.model.builder;
 
 import es.amplia.springamqp.model.AuditMessage;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class AuditMessageBuilder {
+public class AuditMessageBuilder {
 
-    private AuditMessage auditMessage;
-
-    protected AuditMessageBuilder() {
-        auditMessage = instantiateConcreteMessage();
+    public static AuditMessageBuilder builder() {
+        return new AuditMessageBuilder();
     }
 
-    protected abstract AuditMessage instantiateConcreteMessage();
+    private final AuditMessage auditMessage = new AuditMessage();
 
-    protected AuditMessage getAuditMessage() {
+    public final AuditMessage build () {
         return auditMessage;
     }
 
-    public final AuditMessage build () {
-        return getAuditMessage();
+    public AuditMessageBuilder process(AuditMessage.ProcessType process) {
+        auditMessage.setProcess(process);
+        return this;
     }
 
-    public AuditMessageBuilder component(String component) {
+    public AuditMessageBuilder component(AuditMessage.ComponentType component) {
         auditMessage.setComponent(component);
         return this;
     }
 
-    public AuditMessageBuilder name(String name) {
+    public AuditMessageBuilder name(AuditMessage.NameType name) {
         auditMessage.setName(name);
         return this;
     }
@@ -50,8 +50,23 @@ public abstract class AuditMessageBuilder {
         return this;
     }
 
+    public AuditMessageBuilder subjectType(AuditMessage.SubjectType subjectType) {
+        auditMessage.setSubjectType(subjectType);
+        return this;
+    }
+
+    public AuditMessageBuilder user(String user) {
+        auditMessage.setUser(user);
+        return this;
+    }
+
     public AuditMessageBuilder transactionId(String transactionId) {
         auditMessage.setTransactionId(transactionId);
+        return this;
+    }
+
+    public AuditMessageBuilder sequenceId(String sequenceId) {
+        auditMessage.setSequenceId(sequenceId);
         return this;
     }
 
@@ -68,6 +83,16 @@ public abstract class AuditMessageBuilder {
     public AuditMessageBuilder payload(Map<String, String> payload) {
         checkNotNull(payload);
         auditMessage.setPayload(new HashMap<>(payload));
+        return this;
+    }
+
+    public AuditMessageBuilder createdDateTime(Date createdDate) {
+        auditMessage.setCreatedDateTime(createdDate);
+        return this;
+    }
+
+    public AuditMessageBuilder version(int version) {
+        auditMessage.setVersion(version);
         return this;
     }
 }

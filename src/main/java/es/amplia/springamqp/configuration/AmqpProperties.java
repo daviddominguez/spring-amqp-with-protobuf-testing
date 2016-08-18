@@ -8,23 +8,14 @@ public class AmqpProperties {
     private Queue queue;
 
     public static class Queue {
-        private String auditMessageNorth;
-        private String auditMessageSouth;
+        private String auditMessage;
 
-        public String getAuditMessageNorth() {
-            return auditMessageNorth;
+        public String getAuditMessage() {
+            return auditMessage;
         }
 
-        public void setAuditMessageNorth(String auditMessageNorth) {
-            this.auditMessageNorth = auditMessageNorth;
-        }
-
-        public String getAuditMessageSouth() {
-            return auditMessageSouth;
-        }
-
-        public void setAuditMessageSouth(String auditMessageSouth) {
-            this.auditMessageSouth = auditMessageSouth;
+        public void setAuditMessage(String auditMessage) {
+            this.auditMessage = auditMessage;
         }
     }
 

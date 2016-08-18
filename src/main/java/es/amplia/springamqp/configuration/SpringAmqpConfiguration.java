@@ -1,28 +1,23 @@
 package es.amplia.springamqp.configuration;
 
 import es.amplia.springamqp.Receiver;
-import es.amplia.springamqp.converter.ProtobufMessageConverter;
-import es.amplia.springamqp.model.serializer.AuditMessageNorthSerializer;
-import es.amplia.springamqp.model.serializer.AuditMessageSouthSerializer;
-import es.amplia.springamqp.protobuf.AuditMessageProtobuf;
+import es.amplia.springamqp.model.converter.ProtobufMessageConverter;
+import es.amplia.springamqp.model.serializer.AuditMessageSerializer;
 import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static es.amplia.springamqp.Receiver.NORTH_MSG_METHOD_NAME;
-import static es.amplia.springamqp.Receiver.SOUTH_MSG_METHOD_NAME;
-import static java.util.Arrays.asList;
-import static org.springframework.amqp.core.Binding.DestinationType.QUEUE;
+import static es.amplia.springamqp.Receiver.AUDIT_MESSAGE_METHOD_NAME;
+import static org.springframework.amqp.core.BindingBuilder.bind;
 
 @Configuration
 @EnableConfigurationProperties(AmqpProperties.class)
@@ -32,59 +27,34 @@ public class SpringAmqpConfiguration {
     private AmqpProperties amqpProperties;
 
     @Bean
-    List<Queue> queues() {
-        return asList(
-                new Queue(amqpProperties.getQueue().getAuditMessageNorth()),
-                new Queue(amqpProperties.getQueue().getAuditMessageSouth())
-        );
+    Queue queue() {
+        return new Queue(amqpProperties.getQueue().getAuditMessage());
     }
 
     @Bean
-    List<Binding> bindings() {
-        return asList(
-                new Binding(amqpProperties.getQueue().getAuditMessageNorth(), QUEUE, "",
-                        amqpProperties.getQueue().getAuditMessageNorth(), null),
-                new Binding(amqpProperties.getQueue().getAuditMessageSouth(), QUEUE, "",
-                        amqpProperties.getQueue().getAuditMessageSouth(), null)
-        );
+    Exchange defaultExchange() {
+        return new DirectExchange("");
+    }
+    @Bean
+    Binding binding(Queue queue, Exchange defaultExchange) {
+        return bind(queue).to(defaultExchange).with(amqpProperties.getQueue().getAuditMessage()).noargs();
     }
 
     @Bean
-    SimpleMessageListenerContainer auditMessageNorthContainer(
+    SimpleMessageListenerContainer auditMessageContainer(
             ConnectionFactory connectionFactory,
-            @Qualifier("auditMessageNorthListenerAdapter") MessageListenerAdapter listenerAdapter
-    ) {
-        return container(connectionFactory, listenerAdapter, amqpProperties.getQueue().getAuditMessageNorth());
-    }
-
-    @Bean
-    SimpleMessageListenerContainer auditMessageSouthContainer(
-            ConnectionFactory connectionFactory,
-            @Qualifier("auditMessageSouthListenerAdapter") MessageListenerAdapter listenerAdapter
-    ) {
-        return container(connectionFactory, listenerAdapter, amqpProperties.getQueue().getAuditMessageSouth());
-    }
-
-    private SimpleMessageListenerContainer container(
-            ConnectionFactory connectionFactory,
-            MessageListenerAdapter listenerAdapter,
-            String queueName
+            MessageListenerAdapter listenerAdapter
     ) {
         final SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(amqpProperties.getQueue().getAuditMessage());
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
-    public MessageConverter auditMessageNorthConverter() {
-        return new ProtobufMessageConverter<>(new AuditMessageNorthSerializer());
-    }
-
-    @Bean
-    public MessageConverter auditMessageSouthConverter() {
-        return new ProtobufMessageConverter<>(new AuditMessageSouthSerializer());
+    public MessageConverter auditMessageConverter() {
+        return new ProtobufMessageConverter<>(new AuditMessageSerializer());
     }
 
     @Bean
@@ -93,16 +63,9 @@ public class SpringAmqpConfiguration {
     }
 
     @Bean
-    MessageListenerAdapter auditMessageNorthListenerAdapter(Receiver receiver) {
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, NORTH_MSG_METHOD_NAME);
-        messageListenerAdapter.setMessageConverter(auditMessageNorthConverter());
-        return messageListenerAdapter;
-    }
-
-    @Bean
-    MessageListenerAdapter auditMessageSouthListenerAdapter(Receiver receiver) {
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, SOUTH_MSG_METHOD_NAME);
-        messageListenerAdapter.setMessageConverter(auditMessageSouthConverter());
+    MessageListenerAdapter auditMessageListenerAdapter(Receiver receiver) {
+        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, AUDIT_MESSAGE_METHOD_NAME);
+        messageListenerAdapter.setMessageConverter(auditMessageConverter());
         return messageListenerAdapter;
     }
 }
