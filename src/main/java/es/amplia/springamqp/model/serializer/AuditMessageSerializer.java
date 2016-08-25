@@ -31,18 +31,18 @@ public class AuditMessageSerializer implements ProtobufSerializer<AuditMessage> 
         return AuditMessageProto.AuditMessage.newBuilder()
                 .setProcess(fromNullable(getEnum(ProcessType.class, Objects.toString(object.getProcess()))).or(NO_PROCESS))
                 .setComponent(fromNullable(getEnum(ComponentType.class, Objects.toString(object.getComponent()))).or(NO_COMPONENT))
-                .setName(fromNullable(getEnum(NameType.class, Objects.toString(object.getName()))).or(NO_NAME))
-                .setType(fromNullable(getEnum(MsgType.class, Objects.toString(object.getType()))).or(NO_TYPE))
-                .setDirection(fromNullable(getEnum(MsgDirection.class, Objects.toString(object.getDirection()))).or(NO_DIR))
+                .setName(fromNullable(getEnum(NameType.class, Objects.toString(object.getMsgName()))).or(NO_NAME))
+                .setType(fromNullable(getEnum(MsgType.class, Objects.toString(object.getMsgType()))).or(NO_TYPE))
+                .setDirection(fromNullable(getEnum(MsgDirection.class, Objects.toString(object.getMsgDirection()))).or(NO_DIR))
                 .setSubject(fromNullable(object.getSubject()).or(""))
                 .setSubjectType(fromNullable(getEnum(SubjectType.class, Objects.toString(object.getSubjectType()))).or(NO_SUBJECT))
                 .setUser(fromNullable(object.getUser()).or(""))
                 .setTransactionId(fromNullable(object.getTransactionId()).or(""))
                 .setSequenceId(fromNullable(object.getSequenceId()).or(""))
-                .setStatus(fromNullable(getEnum(MsgStatus.class, Objects.toString(object.getStatus()))).or(NONE))
-                .setByteSize(object.getByteSize())
-                .putAllPayload(getSafePayload(object.getPayload()))
-                .setCreatedDateTime(getTimestampFromDate(object.getCreatedDateTime()))
+                .setStatus(fromNullable(getEnum(MsgStatus.class, Objects.toString(object.getMsgStatus()))).or(NONE))
+                .setByteSize(object.getMsgSizeBytes())
+                .putAllPayload(getSafePayload(object.getMsgContext()))
+                .setCreatedDateTime(getTimestampFromDate(object.getTimestamp()))
                 .setVersion(object.getVersion())
                 .build().toByteArray();
     }
@@ -54,18 +54,18 @@ public class AuditMessageSerializer implements ProtobufSerializer<AuditMessage> 
             return AuditMessageBuilder.builder()
                     .process(getEnum(AuditMessage.ProcessType.class, Objects.toString(protoObject.getProcess())))
                     .component(getEnum(AuditMessage.ComponentType.class, Objects.toString(protoObject.getComponent().name())))
-                    .name(getEnum(AuditMessage.NameType.class, Objects.toString(protoObject.getName().name())))
-                    .type(getEnum(AuditMessage.MsgType.class, Objects.toString(protoObject.getType().name())))
-                    .direction(getEnum(AuditMessage.MsgDirection.class, Objects.toString(protoObject.getDirection().name())))
+                    .msgName(getEnum(AuditMessage.NameType.class, Objects.toString(protoObject.getName().name())))
+                    .msgType(getEnum(AuditMessage.MsgType.class, Objects.toString(protoObject.getType().name())))
+                    .msgDirection(getEnum(AuditMessage.MsgDirection.class, Objects.toString(protoObject.getDirection().name())))
                     .subject(getValueOrNullIfEmpty(protoObject.getSubject()))
                     .subjectType(getEnum(AuditMessage.SubjectType.class, Objects.toString(protoObject.getSubjectType().name())))
                     .user(getValueOrNullIfEmpty(protoObject.getUser()))
                     .transactionId(getValueOrNullIfEmpty(protoObject.getTransactionId()))
                     .sequenceId(getValueOrNullIfEmpty(protoObject.getSequenceId()))
-                    .status(getEnum(AuditMessage.MsgStatus.class, Objects.toString(protoObject.getStatus().name())))
-                    .byteSize(protoObject.getByteSize())
-                    .payload(getSafePayload(protoObject.getPayloadMap()))
-                    .createdDateTime(getDateFromTimestamp(protoObject.getCreatedDateTime()))
+                    .msgStatus(getEnum(AuditMessage.MsgStatus.class, Objects.toString(protoObject.getStatus().name())))
+                    .msgSizeBytes(protoObject.getByteSize())
+                    .msgContext(getSafePayload(protoObject.getPayloadMap()))
+                    .timestamp(getDateFromTimestamp(protoObject.getCreatedDateTime()))
                     .version(protoObject.getVersion())
                     .build();
         } catch (InvalidProtocolBufferException e) {
@@ -74,9 +74,9 @@ public class AuditMessageSerializer implements ProtobufSerializer<AuditMessage> 
     }
 
     /**
-     * Avoids NullPointerException when payload is null and Protobuf's putAll method invoked.
+     * Avoids NullPointerException when msgContext is null and Protobuf's putAll method invoked.
      * @param payload nullable map
-     * @return filled payload map or empty Map if null payload passed.
+     * @return filled msgContext map or empty Map if null msgContext passed.
      * @see Map#putAll(Map)
      */
     private Map<String, String> getSafePayload(Map<String, String> payload) {

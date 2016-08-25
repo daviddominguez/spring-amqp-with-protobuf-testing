@@ -30,18 +30,18 @@ public class AuditMessageBuilder {
         return this;
     }
 
-    public AuditMessageBuilder name(AuditMessage.NameType name) {
-        auditMessage.setName(name);
+    public AuditMessageBuilder msgName(AuditMessage.NameType msgName) {
+        auditMessage.setMsgName(msgName);
         return this;
     }
 
-    public AuditMessageBuilder type(AuditMessage.MsgType type) {
-        auditMessage.setType(type);
+    public AuditMessageBuilder msgType(AuditMessage.MsgType msgType) {
+        auditMessage.setMsgType(msgType);
         return this;
     }
 
-    public AuditMessageBuilder direction(AuditMessage.MsgDirection direction) {
-        auditMessage.setDirection(direction);
+    public AuditMessageBuilder msgDirection(AuditMessage.MsgDirection msgDirection) {
+        auditMessage.setMsgDirection(msgDirection);
         return this;
     }
 
@@ -70,24 +70,24 @@ public class AuditMessageBuilder {
         return this;
     }
 
-    public AuditMessageBuilder status(AuditMessage.MsgStatus status) {
-        auditMessage.setStatus(status);
+    public AuditMessageBuilder msgStatus(AuditMessage.MsgStatus msgStatus) {
+        auditMessage.setMsgStatus(msgStatus);
         return this;
     }
 
-    public AuditMessageBuilder byteSize(int byteSize) {
-        auditMessage.setByteSize(byteSize);
+    public AuditMessageBuilder msgSizeBytes(int msgSizeBytes) {
+        auditMessage.setMsgSizeBytes(msgSizeBytes);
         return this;
     }
 
-    public AuditMessageBuilder payload(Map<String, String> payload) {
-        checkNotNull(payload);
-        auditMessage.setPayload(new HashMap<>(payload));
+    public AuditMessageBuilder msgContext(Map<String, String> msgContext) {
+        checkNotNull(msgContext);
+        auditMessage.setMsgContext(new HashMap<>(msgContext));
         return this;
     }
 
-    public AuditMessageBuilder createdDateTime(Date createdDate) {
-        auditMessage.setCreatedDateTime(createdDate);
+    public AuditMessageBuilder timestamp(Date createdDate) {
+        auditMessage.setTimestamp(createdDate);
         return this;
     }
 

@@ -20,18 +20,18 @@ public class AuditMessage {
 
     private ProcessType process;
     private ComponentType component;
-    private NameType name;
-    private MsgType type;
-    private MsgDirection direction;
+    private NameType msgName;
+    private MsgType msgType;
+    private MsgDirection msgDirection;
     private String subject;
     private SubjectType subjectType;
     private String user;
     private String transactionId;
     private String sequenceId;
-    private MsgStatus status;
-    private int byteSize;
-    private Map<String, String> payload;
-    private Date createdDateTime;
+    private MsgStatus msgStatus;
+    private int msgSizeBytes;
+    private Map<String, String> msgContext;
+    private Date timestamp;
     private int version;
 
     public ProcessType getProcess() {
@@ -50,28 +50,28 @@ public class AuditMessage {
         this.component = component;
     }
 
-    public NameType getName() {
-        return name;
+    public NameType getMsgName() {
+        return msgName;
     }
 
-    public void setName(NameType name) {
-        this.name = name;
+    public void setMsgName(NameType msgName) {
+        this.msgName = msgName;
     }
 
-    public MsgType getType() {
-        return type;
+    public MsgType getMsgType() {
+        return msgType;
     }
 
-    public void setType(MsgType type) {
-        this.type = type;
+    public void setMsgType(MsgType msgType) {
+        this.msgType = msgType;
     }
 
-    public MsgDirection getDirection() {
-        return direction;
+    public MsgDirection getMsgDirection() {
+        return msgDirection;
     }
 
-    public void setDirection(MsgDirection direction) {
-        this.direction = direction;
+    public void setMsgDirection(MsgDirection msgDirection) {
+        this.msgDirection = msgDirection;
     }
 
     public String getSubject() {
@@ -114,36 +114,36 @@ public class AuditMessage {
         this.sequenceId = sequenceId;
     }
 
-    public MsgStatus getStatus() {
-        return status;
+    public MsgStatus getMsgStatus() {
+        return msgStatus;
     }
 
-    public void setStatus(MsgStatus status) {
-        this.status = status;
+    public void setMsgStatus(MsgStatus msgStatus) {
+        this.msgStatus = msgStatus;
     }
 
-    public int getByteSize() {
-        return byteSize;
+    public int getMsgSizeBytes() {
+        return msgSizeBytes;
     }
 
-    public void setByteSize(int byteSize) {
-        this.byteSize = byteSize;
+    public void setMsgSizeBytes(int msgSizeBytes) {
+        this.msgSizeBytes = msgSizeBytes;
     }
 
-    public Map<String, String> getPayload() {
-        return payload;
+    public Map<String, String> getMsgContext() {
+        return msgContext;
     }
 
-    public void setPayload(Map<String, String> payload) {
-        this.payload = payload;
+    public void setMsgContext(Map<String, String> msgContext) {
+        this.msgContext = msgContext;
     }
 
-    public Date getCreatedDateTime() {
-        return createdDateTime;
+    public Date getTimestamp() {
+        return timestamp;
     }
 
-    public void setCreatedDateTime(Date createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getVersion() {
@@ -159,27 +159,27 @@ public class AuditMessage {
         if (this == o) return true;
         if (!(o instanceof AuditMessage)) return false;
         AuditMessage that = (AuditMessage) o;
-        return equal(byteSize, that.byteSize) &&
+        return equal(msgSizeBytes, that.msgSizeBytes) &&
                 equal(version, that.version) &&
                 equal(process, that.process) &&
                 equal(component, that.component) &&
-                equal(name, that.name) &&
-                equal(type, that.type) &&
-                equal(direction, that.direction) &&
+                equal(msgName, that.msgName) &&
+                equal(msgType, that.msgType) &&
+                equal(msgDirection, that.msgDirection) &&
                 equal(subject, that.subject) &&
                 equal(subjectType, that.subjectType) &&
                 equal(user, that.user) &&
                 equal(transactionId, that.transactionId) &&
                 equal(sequenceId, that.sequenceId) &&
-                equal(status, that.status) &&
-                equal(payload, that.payload) &&
-                equal(createdDateTime, that.createdDateTime);
+                equal(msgStatus, that.msgStatus) &&
+                equal(msgContext, that.msgContext) &&
+                equal(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(process, component, name, type, direction, subject, subjectType, user, transactionId,
-                sequenceId, status, byteSize, payload, createdDateTime, version);
+        return Objects.hashCode(process, component, msgName, msgType, msgDirection, subject, subjectType, user, transactionId,
+                sequenceId, msgStatus, msgSizeBytes, msgContext, timestamp, version);
     }
 
     @Override
@@ -187,18 +187,18 @@ public class AuditMessage {
         return toStringHelper(this)
                 .add("process", process)
                 .add("component", component)
-                .add("name", name)
-                .add("type", type)
-                .add("direction", direction)
+                .add("msgName", msgName)
+                .add("msgType", msgType)
+                .add("msgDirection", msgDirection)
                 .add("subject", subject)
                 .add("subjectType", subjectType)
                 .add("user", user)
                 .add("transactionId", transactionId)
                 .add("sequenceId", sequenceId)
-                .add("status", status)
-                .add("byteSize", byteSize)
-                .add("payload", payload)
-                .add("createdDateTime", createdDateTime)
+                .add("msgStatus", msgStatus)
+                .add("msgSizeBytes", msgSizeBytes)
+                .add("msgContext", msgContext)
+                .add("timestamp", timestamp)
                 .add("version", version)
                 .omitNullValues()
                 .toString();

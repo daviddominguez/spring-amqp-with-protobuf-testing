@@ -86,7 +86,7 @@ public class AuditMessageSerializerTest {
 
     private AuditMessage given_an_auditMessage_without_any_attribute_set_except_dateTime() throws ParseException {
         return AuditMessageBuilder.builder()
-                .createdDateTime(format.parse(TIMESTAMP))
+                .timestamp(format.parse(TIMESTAMP))
                 .build();
     }
 
@@ -94,18 +94,18 @@ public class AuditMessageSerializerTest {
         return AuditMessageBuilder.builder()
                 .process(ALARM)
                 .component(WEBSOCKET)
-                .name(DMM)
-                .type(RESPONSE)
-                .direction(IN)
+                .msgName(DMM)
+                .msgType(RESPONSE)
+                .msgDirection(IN)
                 .subject("subject")
                 .subjectType(IMSI)
                 .user("user")
                 .transactionId("transactionId")
                 .sequenceId("sequenceId")
-                .status(SUCCESS)
-                .byteSize(100)
-                .payload(singletonMap("payload_key", "payload_value"))
-                .createdDateTime(format.parse(TIMESTAMP))
+                .msgStatus(SUCCESS)
+                .msgSizeBytes(100)
+                .msgContext(singletonMap("payload_key", "payload_value"))
+                .timestamp(format.parse(TIMESTAMP))
                 .version(1)
                 .build();
     }
@@ -190,19 +190,19 @@ public class AuditMessageSerializerTest {
         assertThat(auditMessage, notNullValue());
         assertThat(auditMessage.getProcess(), is(ALARM));
         assertThat(auditMessage.getComponent(), is(WEBSOCKET));
-        assertThat(auditMessage.getName(), is(DMM));
-        assertThat(auditMessage.getType(), is(RESPONSE));
-        assertThat(auditMessage.getDirection(), is(IN));
+        assertThat(auditMessage.getMsgName(), is(DMM));
+        assertThat(auditMessage.getMsgType(), is(RESPONSE));
+        assertThat(auditMessage.getMsgDirection(), is(IN));
         assertThat(auditMessage.getSubject(), is("subject"));
         assertThat(auditMessage.getSubjectType(), is(IMSI));
         assertThat(auditMessage.getUser(), is("user"));
         assertThat(auditMessage.getTransactionId(), is("transactionId"));
         assertThat(auditMessage.getSequenceId(), is("sequenceId"));
-        assertThat(auditMessage.getStatus(), is(SUCCESS));
-        assertThat(auditMessage.getByteSize(), is(100));
-        assertThat(auditMessage.getPayload().size(), is(1));
-        assertThat(auditMessage.getPayload(), hasEntry("payload_key", "payload_value"));
-        assertThat(auditMessage.getCreatedDateTime(), is(format.parse(TIMESTAMP)));
+        assertThat(auditMessage.getMsgStatus(), is(SUCCESS));
+        assertThat(auditMessage.getMsgSizeBytes(), is(100));
+        assertThat(auditMessage.getMsgContext().size(), is(1));
+        assertThat(auditMessage.getMsgContext(), hasEntry("payload_key", "payload_value"));
+        assertThat(auditMessage.getTimestamp(), is(format.parse(TIMESTAMP)));
         assertThat(auditMessage.getVersion(), is(1));
     }
 
@@ -210,18 +210,18 @@ public class AuditMessageSerializerTest {
         assertThat(auditMessage, notNullValue());
         assertThat(auditMessage.getProcess(), nullValue());
         assertThat(auditMessage.getComponent(), nullValue());
-        assertThat(auditMessage.getName(), nullValue());
-        assertThat(auditMessage.getType(), nullValue());
-        assertThat(auditMessage.getDirection(), nullValue());
+        assertThat(auditMessage.getMsgName(), nullValue());
+        assertThat(auditMessage.getMsgType(), nullValue());
+        assertThat(auditMessage.getMsgDirection(), nullValue());
         assertThat(auditMessage.getSubject(), nullValue());
         assertThat(auditMessage.getSubjectType(), nullValue());
         assertThat(auditMessage.getUser(), nullValue());
         assertThat(auditMessage.getTransactionId(), nullValue());
         assertThat(auditMessage.getSequenceId(), nullValue());
-        assertThat(auditMessage.getStatus(), nullValue());
-        assertThat(auditMessage.getByteSize(), is(0));
-        assertThat(auditMessage.getPayload().size(), is(0));
-        assertThat(auditMessage.getCreatedDateTime(), is(format.parse(TIMESTAMP)));
+        assertThat(auditMessage.getMsgStatus(), nullValue());
+        assertThat(auditMessage.getMsgSizeBytes(), is(0));
+        assertThat(auditMessage.getMsgContext().size(), is(0));
+        assertThat(auditMessage.getTimestamp(), is(format.parse(TIMESTAMP)));
         assertThat(auditMessage.getVersion(), is(0));
     }
 }
