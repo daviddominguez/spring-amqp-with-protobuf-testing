@@ -77,7 +77,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <spring-boot-starter.version>1.4.0.RELEASE</spring-boot-starter.version>
         <guava.version>19.0</guava.version>
-        <protobuf-java.version>3.0.0</protobuf-java.version>
+        <protobuf-java.version>3.16.1</protobuf-java.version>
         <commons-lang3.version>3.4</commons-lang3.version>
 
         <slf4j.version>1.7.21</slf4j.version>
